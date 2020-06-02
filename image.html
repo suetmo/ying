@@ -1,6 +1,7 @@
 <html>
 
 <head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<style>
 		body {
 		padding: 0;
@@ -18,7 +19,7 @@
 		position:absolute;
 		left:0;
 		bottom:0;
-		height: 30px;
+		height: 8%;
 		background-color: rgba(0,0,0,0.5);
 		color: #fff;
 		width: 100%;
@@ -29,8 +30,9 @@
 			
 		}
 		#footer div {
-			margin-right: 5px;
+			margin-right: 10px;
 			cursor: pointer;
+			font-size: 100%;
 			
 		}
 		#window {
@@ -45,7 +47,7 @@
 		}
 		#window-block {
 			width: 90%;
-			height: 50%;
+			height: 60%;
 			max-width: 600px;
 			background-color: rgba(0,0,0,0.85);
 			color: #fff;
@@ -85,6 +87,8 @@
 		
 		#count {
 			position: absolute;
+			height: 0;
+			width: 0;
 		}
 		
 	</style>
@@ -127,8 +131,6 @@
  const loadingImgUrl = url.slice(0,index+1) + "img/loading.gif";
  document.getElementById("img").src = imgUrl;
  document.getElementById("loadingImg").src = loadingImgUrl;
- 
-const xhr = new XMLHttpRequest();
  
  function footerBtnClickFnc() {
 	if (document.getElementById('window').style.visibility === "visible") {
@@ -206,7 +208,29 @@ const xhr = new XMLHttpRequest();
             params.currentX = e.clientX;
             params.currentY = e.clientY;
         };
+		bar.ontouchstart = function(event){
+            params.flag = true;
+            if(!event){
+                event = window.event;
+                //防止IE文字选中
+                bar.onselectstart = function(){
+                    return false;
+                }
+            }
+            var e = event;
+            params.currentX = e.touches[0].clientX;
+            params.currentY = e.touches[0].clientY;
+        };
         document.onmouseup = function(){
+            params.flag = false;
+            if(getCss(target, "left") !== "auto"){
+                params.left = getCss(target, "left");
+            }
+            if(getCss(target, "top") !== "auto"){
+                params.top = getCss(target, "top");
+            }
+        };
+		document.ontouchend = function(){
             params.flag = false;
             if(getCss(target, "left") !== "auto"){
                 params.left = getCss(target, "left");
@@ -231,13 +255,26 @@ const xhr = new XMLHttpRequest();
                 if (event.preventDefault) {
                     event.preventDefault();
                 }
+				
                 return false;
             }
  
  
         }
 		}
-		
+		document.addEventListener('touchmove', function(e) {
+			const target = document.getElementById("img");
+			var e = event ? event: window.event;
+			
+            if(params.flag){
+                var nowX = e.touches[0].clientX, nowY = e.touches[0].clientY;
+                var disX = nowX - params.currentX, disY = nowY - params.currentY;
+                target.style.left = parseInt(params.left) + disX+ "px";
+                target.style.top = parseInt(params.top) + disY+ "px";
+				
+                return false;
+            }
+			 }, false);
 		startDrag(document.getElementById("img"),document.getElementById("img"))
 </script>
 
