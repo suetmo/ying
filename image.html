@@ -37,22 +37,29 @@
 			visibility: hidden;
 			z-index: 1;
 			position:absolute;
-			top: 25%;
-			left: 5%;
+			width: 100%;
+			height: 100%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+		#window-block {
 			width: 90%;
 			height: 50%;
+			max-width: 600px;
 			background-color: rgba(0,0,0,0.85);
 			color: #fff;
 			
 			display: flex;
+			flex-direction: column;
 			justify-content: center;
 			align-items: center;
 			border-radius:10px;
 		}
 		#window-btns {
-			width: 100%;
+			width: 70%;
 			display: flex;
-			justify-content: flex-end;
+			justify-content: space-between;
 		}
 		#window-btns div {
 			margin-left: 10px;
@@ -84,8 +91,8 @@
 <div id="loading"> <img id="loadingImg" src="" border="0"> </div>
 
 <div id="window">
-	<div>
-		<h1>请选择举报原因: </h1>
+	<div id="window-block">
+		<h1>请选择举报原因： </h1>
 		<form action="">
 		  <input type="radio" id="a" name="test" value="a" checked>
 		  <label for="a"> 色情/违法等不良信息</label><br>
@@ -94,11 +101,11 @@
 		  <input type="radio" id="c" name="test" value="c">
 		  <label for="c"> 侵犯未成年人权益</label><br>
 		  <input type="radio" id="d" name="test" value="d">
-		  <label for="d">其他: <input type="text" id="fname" name="fname" value=""></label><br><br>
+		  <label for="d">其他：<input type="text" id="fname" name="fname" value=""></label><br><br>
 		</form>
 		<div id="window-btns">
-		  <div id="window__submit" onclick="submitFnc()" >提交</div>
 		  <div id="window__cancel" onclick="cancelFnc()" >取消</div>
+		  <div id="window__submit" onclick="submitFnc()" >提交</div>
 		</div>
 	</div>
 </div>
@@ -115,6 +122,8 @@
  document.getElementById("img").src = imgUrl;
  document.getElementById("loadingImg").src = loadingImgUrl;
  
+const xhr = new XMLHttpRequest();
+ 
  function footerBtnClickFnc() {
 	if (document.getElementById('window').style.visibility === "visible") {
 		document.getElementById('window').style.visibility = "hidden";
@@ -130,6 +139,8 @@
  
  function loadingFnc() {
 	document.getElementById('loading').style.visibility = "hidden";
+	xhr.open('GET', encodeURI("https://suetmo.github.io/ying/count"));
+	xhr.send();
 	setTimeout(success, 20);
 	
  }
