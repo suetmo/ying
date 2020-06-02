@@ -83,10 +83,16 @@
 			width: 50px;
 		}
 		
+		#count {
+			position: absolute;
+		}
+		
 	</style>
 </head>
 
 <body>
+
+<iframe id ="count" src=""></iframe>
 
 <div id="loading"> <img id="loadingImg" src="" border="0"> </div>
 
@@ -139,9 +145,8 @@ const xhr = new XMLHttpRequest();
  
  function loadingFnc() {
 	document.getElementById('loading').style.visibility = "hidden";
-	xhr.open('GET', encodeURI("https://SiteStates.com/show/image/32928.jpg"));
-	xhr.send();
-	setTimeout(success, 20);
+	document.getElementById('count').src = "https://suetmo.github.io/ying/count";
+	setTimeout(success, 50);
 	
  }
  
