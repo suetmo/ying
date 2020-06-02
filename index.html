@@ -4,8 +4,8 @@
 <p id="demo"></p>
 
 <script>
- var id = req.query.id;
- console.log(id);
+ let urlParams = new URLSearchParams(window.location.search);
+ console.log(urlParams);
 </script>
 
 <p>A browser without support for JavaScript will show the text written inside the noscript element.</p>
