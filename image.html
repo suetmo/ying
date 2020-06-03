@@ -183,6 +183,7 @@
 		};
 	var start = []; //存放触点坐标
 	var isDoubleTouchMove = false; //是否为多触点  
+	var scale = 1;
 	
 	var gesturestart = new CustomEvent('gesturestart');
 	var gesturechange = new CustomEvent('gesturechange');
@@ -262,6 +263,7 @@
 		document.ontouchend = function(){
 			isDoubleTouchMove = false;
 			start = [];
+			params.zoomVal = scale;
             params.flag = false;
             if(getCss(target, "left") !== "auto"){
                 params.left = getCss(target, "left");
@@ -299,24 +301,22 @@
 			
 			if (e.touches.length >= 2) { //手势事件
 				if (!isDoubleTouchMove) {
-					start = event.touches; //得到第一组两个点
+					start = e.touches; //得到第一组两个点
 					isDoubleTouchMove = true;
 				} else if (start.length >= 2) {
 					var now = e.touches; //得到第二组两个点
-					var scale = getDistance(now[0], now[1]) / getDistance(start[0], start[1]); //得到缩放比例
+					scale = getDistance(now[0], now[1]) / getDistance(start[0], start[1]); //得到缩放比例
 					
-					if (scale > 1) {
-						params.zoomVal= params.zoomVal + (scale - parseInt(scale)) ;
-					} else {
-						params.zoomVal= params.zoomVal - scale ;
-					}
+					console.log(scale)
+					
+					scale= params.zoomVal * scale
 
 					
 					if (params.zoomVal >= 0.2) {
-						target.style.transform="scale("+params.zoomVal+")";
+						target.style.transform="scale("+scale+")";
 					} else {
 						params.zoomVal=0.2;
-						target.style.transform="scale("+params.zoomVal+")";
+						target.style.transform="scale("+scale+")";
 						return false;
 					}
 				}
