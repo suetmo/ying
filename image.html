@@ -181,7 +181,7 @@
         flag: false
 		};
 	var start = []; //存放触点坐标
-	var isDoubleTouch = false; //是否为多触点  
+	var isDoubleTouchMove = false; //是否为多触点  
 	
 	var gesturestart = new CustomEvent('gesturestart');
 	var gesturechange = new CustomEvent('gesturechange');
@@ -237,22 +237,17 @@
             params.currentY = e.clientY;
         };
 		bar.ontouchstart = function(event){
-			if (event.touches.length >= 2) { //判断是否有两个点在屏幕上
-				isDoubleTouch = true;
-				start = event.touches; //得到第一组两个点
-			} else {
-				params.flag = true;
-				if(!event){
-					event = window.event;
-					//防止IE文字选中
-					bar.onselectstart = function(){
-						return false;
-					}
+			params.flag = true;
+			if(!event){
+				event = window.event;
+				//防止IE文字选中
+				bar.onselectstart = function(){
+					return false;
 				}
-				var e = event;
-				params.currentX = e.touches[0].clientX;
-				params.currentY = e.touches[0].clientY;
 			}
+			var e = event;
+			params.currentX = e.touches[0].clientX;
+			params.currentY = e.touches[0].clientY;
         };
         document.onmouseup = function(){
             params.flag = false;
@@ -264,6 +259,9 @@
             }
         };
 		document.ontouchend = function(){
+			if (isDoubleTouchMove) {
+				isDoubleTouchMove = false;
+			}
             params.flag = false;
             if(getCss(target, "left") !== "auto"){
                 params.left = getCss(target, "left");
@@ -300,10 +298,15 @@
 			var e = event ? event: window.event;
 			
 			
-			if (e.touches.length >= 2 && isDoubleTouch) { //手势事件
-				var now = e.touches; //得到第二组两个点
-				var scale = getDistance(now[0], now[1]) / getDistance(start[0], start[1]); //得到缩放比例
-				target.style.transform="scale("+scale+")";
+			if (e.touches.length >= 2) { //手势事件
+				if (!isDoubleTouchMove) {
+					start = event.touches; //得到第一组两个点
+					isDoubleTouchMove = true;
+				} else {
+					var now = e.touches; //得到第二组两个点
+					var scale = getDistance(now[0], now[1]) / getDistance(start[0], start[1]); //得到缩放比例
+					target.style.transform="scale("+scale+")";
+				}
 			} else {
 				if(params.flag){
 					var nowX = e.touches[0].clientX, nowY = e.touches[0].clientY;
