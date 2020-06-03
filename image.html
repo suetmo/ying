@@ -296,6 +296,8 @@
 			const target = document.getElementById("img");
 			var e = event ? event: window.event;
 			
+			console.log(target.style.transform.);
+			
 			
 			if (e.touches.length >= 2) { //手势事件
 				if (!isDoubleTouchMove) {
@@ -304,7 +306,15 @@
 				} else if (start.length >= 2) {
 					var now = e.touches; //得到第二组两个点
 					var scale = getDistance(now[0], now[1]) / getDistance(start[0], start[1]); //得到缩放比例
-					target.style.transform="scale("+scale+")";
+
+					params.zoomVal= params.zoomVal * scale;
+					if (params.zoomVal >= 0.2) {
+						target.style.transform="scale("+params.zoomVal+")";
+					} else {
+						params.zoomVal=0.2;
+						target.style.transform="scale("+params.zoomVal+")";
+						return false;
+					}
 				}
 			} else {
 				if(params.flag){
