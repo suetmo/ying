@@ -259,9 +259,8 @@
             }
         };
 		document.ontouchend = function(){
-			if (isDoubleTouchMove) {
-				isDoubleTouchMove = false;
-			}
+			isDoubleTouchMove = false;
+			start = [];
             params.flag = false;
             if(getCss(target, "left") !== "auto"){
                 params.left = getCss(target, "left");
@@ -302,7 +301,7 @@
 				if (!isDoubleTouchMove) {
 					start = event.touches; //得到第一组两个点
 					isDoubleTouchMove = true;
-				} else {
+				} else if (start.length >= 2) {
 					var now = e.touches; //得到第二组两个点
 					var scale = getDistance(now[0], now[1]) / getDistance(start[0], start[1]); //得到缩放比例
 					target.style.transform="scale("+scale+")";
