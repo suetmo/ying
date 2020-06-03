@@ -182,6 +182,22 @@
 		};
 	var start = []; //存放触点坐标
 	var isDoubleTouch = false; //是否为多触点  
+	
+	var gesturestart = new CustomEvent('gesturestart');
+	var gesturechange = new CustomEvent('gesturechange');
+	
+	function getMidpoint(p1, p2) {
+		var x = (p1.pageX + p2.pageX) / 2,
+			y = (p1.pageY + p2.pageY) / 2;
+		return [x, y];
+    }
+	
+	function getDistance(p1, p2) {
+        var x = p2.pageX - p1.pageX,
+            y = p2.pageY - p1.pageY;
+        return Math.sqrt((x * x) + (y * y));
+    };
+	
  
      function bbimg(o){
         var o=o.getElementsByTagName("img")[0];
@@ -224,9 +240,6 @@
 			if (event.touches.length >= 2) { //判断是否有两个点在屏幕上
 				isDoubleTouch = true;
 				start = event.touches; //得到第一组两个点
-				var screenMinPoint = getMidpoint(start[0], start[1]); //获取两个触点中心坐标
-				gesturestart.midPoint = [screenMinPoint[0] - event.target.offsetLeft, screenMinPoint[1] - event.target.offsetTop]; //获取中心点坐标相对目标元素坐标
-				event.target.dispatchEvent(gesturestart);
 			} else {
 				params.flag = true;
 				if(!event){
@@ -288,10 +301,9 @@
 			
 			
 			if (e.touches.length >= 2 && isDoubleTouch) { //手势事件
-            var now = e.touches; //得到第二组两个点
-            var scale = getDistance(now[0], now[1]) / getDistance(start[0], start[1]); //得到缩放比例
-            target.scale = scale.toFixed(2);
-            e.target.dispatchEvent(gesturechange);
+				var now = e.touches; //得到第二组两个点
+				var scale = getDistance(now[0], now[1]) / getDistance(start[0], start[1]); //得到缩放比例
+				target.style.transform="scale("+scale+")";
 			} else {
 				if(params.flag){
 					var nowX = e.touches[0].clientX, nowY = e.touches[0].clientY;
