@@ -181,6 +181,7 @@
         flag: false
 		};
 	var start = []; //存放触点坐标
+	var isDoubleTouch = false; //是否为多触点  
  
      function bbimg(o){
         var o=o.getElementsByTagName("img")[0];
@@ -220,12 +221,12 @@
             params.currentY = e.clientY;
         };
 		bar.ontouchstart = function(event){
-			if (e.touches.length >= 2) { //判断是否有两个点在屏幕上
+			if (event.touches.length >= 2) { //判断是否有两个点在屏幕上
 				isDoubleTouch = true;
-				start = e.touches; //得到第一组两个点
+				start = event.touches; //得到第一组两个点
 				var screenMinPoint = getMidpoint(start[0], start[1]); //获取两个触点中心坐标
-				gesturestart.midPoint = [screenMinPoint[0] - e.target.offsetLeft, screenMinPoint[1] - e.target.offsetTop]; //获取中心点坐标相对目标元素坐标
-				e.target.dispatchEvent(gesturestart);
+				gesturestart.midPoint = [screenMinPoint[0] - event.target.offsetLeft, screenMinPoint[1] - event.target.offsetTop]; //获取中心点坐标相对目标元素坐标
+				event.target.dispatchEvent(gesturestart);
 			} else {
 				params.flag = true;
 				if(!event){
@@ -284,6 +285,7 @@
 		document.addEventListener('touchmove', function(e) {
 			const target = document.getElementById("img");
 			var e = event ? event: window.event;
+			
 			
 			if (e.touches.length >= 2 && isDoubleTouch) { //手势事件
             var now = e.touches; //得到第二组两个点
